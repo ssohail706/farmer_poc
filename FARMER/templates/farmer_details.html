@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+	<title>Farmer</title>
+	<link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+	<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}"> 
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,700i,800,800i&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
+	<link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:400,700,900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<style> 
+input {
+  height: 32px;
+}
+</style>
+</head>
+<body>
+    <header>
+		<!-- Toaster messege -->
+		{% if messages %}
+				{% for message in messages %}
+					<div class="alert alert-success alert-dismissable toaster-msg" role="alert" id="report">
+						{{ message }}
+					</div>
+				{% endfor %}
+		{% endif %}
+	</header>
+
+	<main id="main" class="admin-dashboard-wrapper pt-5">
+		<div class="container-fluid">
+			<div class="row mt-2p5">
+				<div class="col-sm-10">
+					<div class="leave-title">
+						<h4>Farmer Registration</h4>
+					</div>
+					<div class="add-leave-wrapper">
+						<form method="post" id="reportdown">
+                        {% csrf_token %}
+							<div class="row">
+								<div class="form-group col-sm-3" id="details_farmers">
+									<label class="text-purple" for="select-drp1">District Name</label>
+									<select class="js-example-basic-single1 form-control" onchange="getdata(this.value)" id="select-drp1" name="district" required>
+										<option selected disabled>Please Select District Name</option>"
+											 {% for i in district_data %}
+												<option value= "{{i.id}}">{{i.district_name}}</option>"
+											 {% endfor %}
+                                    </select>
+                                    <input type="hidden"  id="dist_ids" name="dist_ids"/>
+								</div>
+								<div class="form-group col-sm-3">
+									<label class="text-purple" for="select-drp2">Taluka Name</label>
+									<select class="js-example-basic-single2 form-control" id="select-drp2" onchange="taluka_data(this.value)" name="taluka" required>
+                                    </select>
+                                    <input type="hidden"  id="taluka_ids" name="taluka_ids"/>
+								</div>
+								<div class="form-group col-sm-3">
+									<label class="text-purple" for="select-drp3">Village Name</label>
+									<select class="js-example-basic-single3 form-control" id="select-drp3" onchange="count_frm(this.value)" name="village" required>
+									</select>
+									<input type="hidden"  id="village_ids" name="village_ids"/>
+								</div>
+                                <div class="form-group col-sm-3">
+									<label class="text-purple" for="former-count">Farmer count</label>
+									<input type="text" class="resizedTextbox" id="farmer_count" name="farmer_count" disabled>
+								</div>
+								<div class="text-center col-sm-12">
+									<button onclick=close_validate(); class="btn btn-default btn-add-user">Clear</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+        <div class="col-sm-12 text-right mb-1 z-999" title="Add New Farmer"><a id="clickclass" data-toggle="modal" data-target="#edit_member" style="margin-right: 237px;" class="btn btn-default btn-add-user">Add New Farmer</a></div>
+        <div class="col-sm-12 text-right mb-1 z-999" title="Farmer Report"><a href="{% url 'report' %}" style="margin-right: 237px;" class="btn btn-default btn-add-user">Report</a></div>
+        <div class="row mt-2p5">
+            <div class="col-sm-10">
+                <div class="show-company-detail-title">
+                    <h4>Farmer Details</h4>
+                </div>
+                <div class="show-company-wrapper">
+                    <table id="showLeave" class="display table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Sr.No</th>
+                                <th>Village Name</th>
+                                <th>Registration No</th>
+                                <th>Farmer Name</th>
+                                <th>Mobile No.</th>
+                                <th>Aadhaar No</th>
+                                <th>Address</th>
+                                <th>Farmeer Photo</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in farmer_data %}
+                                <tr>
+                                    <td>{{i.id}}</td>
+                                    <td>{{i.village.village_name}}</td>
+                                    <td>{{i.id}}</td>
+                                    <td>{{i.first_name}}</td>
+                                    <td>{{i.mobile_number}}</td>
+                                    <td>{{i.aadhaar_number}}</td>
+                                    <td>{{i.address}}</td>
+                                    <td><a href="#" onclick="img_tag1('{{i.img_path}}')" data-toggle="modal" data-target="#img_tag">View photo</a></td>
+                                    <td> <a href="#" title="Update Farmer" class="action-icon" onclick="update_farmer1('{{i.id}}','{{i.first_name}}','{{i.middle_name}}','{{i.last_name}}','{{i.mobile_number}}','{{i.aadhaar_number}}','{{i.district.district_name}}','{{i.taluka.taluka_name}}','{{i.village.village_name}}','{{i.address}}','{{i.img_path}}')" data-toggle="modal" data-target="#update_farmer"><i class="far fa-edit"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+	                        {% comment %} Add farmer model    {% endcomment %}
+    <div class="modal fade" id="edit_member" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content modal-report-wrapper">
+            <div class="modal-header modal-header-title">
+            <button type="button" class="close" data-dismiss="modal" onclick="close_validate()">&times;</button>
+            <h4 class="modal-title">Farmer Registration</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="farmer_add" enctype="multipart/form-data">
+                {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" id="d_id" name="d_id" placeholder=" ">
+                        </div>
+                        <div class="form-group">
+                            <label class="text-purple">First Name</label>
+                            <input type="text" class="form-control removeerror" id="f_name" name="f_name" placeholder="Enter First Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-purple">Middle Name</label>
+                            <input type="text" class="form-control removeerror" id="m_name" name="m_name" placeholder="Enter Middle Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-purple">Last Name</label>
+                            <input type="text" class="form-control removeerror" id="l_name" name="l_name" placeholder="Enter Last Name" required>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="text-purple">Mobile Number</label>
+                                <input type="text" class="form-control removeerror" id="mob_name" name="mob_no" placeholder="Enter Mobile Number" required>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="text-purple">Aadhaar Number</label>
+                                <input type="text" class="form-control removeerror" id="a_no" name="a_no" placeholder="Enter Aadhaar Number" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <label class="text-purple">District Name</label>
+                                <select class="js-example-basic-single1 form-control" onchange="getdata(this.value)" id="select-drp10" name="district" required>
+                                    <option selected disabled>Please Select District Name</option>"
+                                            {% for i in district_data %}
+                                                <option value= "{{i.id}}">{{i.district_name}}</option>"
+                                            {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label class="text-purple" for="select-drp20">Taluka Name</label>
+                                <select class="js-example-basic-single2 form-control" id="select-drp20" onchange="taluka_data(this.value)" name="taluka" required>
+                                </select>
+                                <input type="hidden"  id="taluka_ids1" name="taluka_ids1"/>    
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label class="text-purple" for="select-drp30">Village Name</label>
+                                <select class="js-example-basic-single3 form-control" id="select-drp30" name="village" required>
+                                </select>
+                                <input type="hidden"  id="village_ids1" name="village_ids1"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-purple">Farmer Address</label>
+                            <textarea class="form-control removeerror" id="address" name="address" placeholder="Enter Address" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-purple">Farmer Photo</label>
+                            <input type="file" class="form-control removeerror" id="photo" name="photo" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="close_validate()">Close</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+                           {% comment %} Update farmer model    {% endcomment %}
+    <div class="modal fade" id="update_farmer" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content modal-report-wrapper">
+            <div class="modal-header modal-header-title">
+            <button type="button" class="close" data-dismiss="modal" onclick="close_validate()">&times;</button>
+            <h4 class="modal-title">Farmer Registration</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="farmer_update" enctype="multipart/form-data">
+                {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" id="d_id1" name="d_id1" placeholder=" ">
+                        </div>
+                        <div class="form-group">
+                            <label class="text-purple">First Name</label>
+                            <input type="text" class="form-control removeerror" id="f_name1" name="f_name1" placeholder="Enter First Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-purple">Middle Name</label>
+                            <input type="text" class="form-control removeerror" id="m_name1" name="m_name1" placeholder="Enter Middle Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-purple">Last Name</label>
+                            <input type="text" class="form-control removeerror" id="l_name1" name="l_name1" placeholder="Enter Last Name" required>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="text-purple">Mobile Number</label>
+                                <input type="text" class="form-control removeerror" id="mob_name1" name="mob_no1" placeholder="Enter Mobile Number" required>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="text-purple">Aadhaar Number</label>
+                                <input type="text" class="form-control removeerror" id="a_no1" name="a_no1" placeholder="Enter Aadhaar Number" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-purple">Farmer Address</label>
+                            <textarea class="form-control removeerror" id="address1" name="address1" placeholder="Enter Address" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-purple">Farmer Photo</label>
+                            <input type="file" class="form-control removeerror" id="photo1" name="photo1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="close_validate()">Close</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    {% comment %} img show  {% endcomment %}
+     <div class="modal fade" id="img_tag" role="dialog">
+	   <div class="modal-dialog">
+		  <!-- Modal content-->
+          <div class="modal-content modal-report-wrapper">
+			    <div class="modal-header modal-header-title">
+				    <button type="button" class="close" data-dismiss="modal">&times;</button>
+				    <h4 class="modal-title">Farmer Photo</h4>
+			    </div>
+			    <div class="modal-body">
+                    <img id="imgpic" width="500" height="600">
+                </div>
+            </div>
+	   </div>
+	</div>
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+	<script src="{% static 'js/bootstrap.js' %}"></script>
+	<script src="{% static 'js/script.js' %}"></script>
+	<!--Select2 Dropdown-->
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+	<script src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+	<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.0/jquery.validate.min.js"></script>
+    
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.js-example-basic-single1').select2();
+			$('.js-example-basic-single2').select2();
+            $('.js-example-basic-single3').select2();
+		});
+        function close_validate(){
+		 	var validator = $( "#edit_member" ).validate();
+			validator.resetForm();
+			 $( ".removeerror" ).removeClass('error');
+		 }
+        function img_tag1(path){
+		 	 document.getElementById('imgpic').src="../" + path;
+		 }
+        function update_farmer1(id,f_name,m_name,l_name,m_no,a_no,dist,tal,vill,add,pht) {
+         document.getElementById("d_id1").value = id;
+         document.getElementById("f_name1").value = f_name;
+         document.getElementById("m_name1").value = m_name;
+         document.getElementById("l_name1").value = l_name;
+         document.getElementById("mob_name1").value = m_no;
+         document.getElementById("a_no1").value = a_no;
+         document.getElementById("address1").value = add;
+      	}
+        function count_frm(val){
+            var token = '{{csrf_token}}';
+            var x= val;
+			$.ajax({
+                headers: { "X-CSRFToken": token},
+				type:'post',
+				url:'http://127.0.0.1:8000/farmer/frm_cnt/',
+				data:{'id':x},
+				success:function(response){
+                    console.log(response['data']);
+                    document.getElementById('farmer_count').value = response['data']
+                }
+            })
+        }
+	</script>
+    <script>
+    var user_id = 'none';
+    $('#clickclass').click(function() {
+        user_id = 'add_farmer_id';
+    });
+    $('#details_farmers').click(function() {
+        user_id = 'show_farmer_id';
+    });
+    // Ajax for Taluka
+    function getdata(val) {
+            var token = '{{csrf_token}}';
+			var x= val;
+			var data;
+			$.ajax({
+                headers: { "X-CSRFToken": token},
+				type:'post',
+				url:'http://127.0.0.1:8000/farmer/dist/',
+				data:{'id':x},
+				success:function(response){
+                    res = response['taluka'];
+                    if (response){
+                        var selectBox = document.getElementById('select-drp2');
+				        selectBox = null;
+                        options = '';
+                        taluka_names = [];
+                        selectBox = [];
+                        taluka_names.push(options += '<option selected disabled>' + 'Please Select' +'</option>');
+                            for (var i = 0; i < res.length; i++) {
+                                taluka_names.push(options += '<option value="' + res[i]['id']+ '">' + res[i]['taluka_name'] + '</option>');
+                            }
+                        }
+                    selectBox = taluka_names;
+                    if (user_id == 'show_farmer_id'){
+                        $("#select-drp2").html(options);
+                        $("#select-drp2").change(function(){
+                            var selectedCountry = $(this).children("option:selected").val();
+                            $("#taluka_ids").val(selectedCountry);
+                            
+                        });
+                    }
+                    else{
+                        $("#select-drp20").html(options);
+                        $("#select-drp20").change(function(){
+                            var selectedCountry = $(this).children("option:selected").val();
+                            $("#taluka_ids1").val(selectedCountry);
+                            
+                        });
+                    }
+                }, 
+            })
+        }
+    // Ajax for Village
+    function taluka_data(val) {
+            var token = '{{csrf_token}}';
+			var x= val;
+			var data;
+			$.ajax({
+                headers: {"X-CSRFToken": token},
+				type:'post',
+				url:'http://127.0.0.1:8000/farmer/taluka/',
+				data:{'id':x},
+				success:function(response){
+                    res = response['village'];
+                    if (response){
+                        var selectBox = document.getElementById('select-drp3');
+				        selectBox = null;
+                        options = '';
+                        village_names = [];
+                        selectBox = [];
+                        village_names.push(options += '<option selected disabled>' + 'Please Select' +'</option>');
+                            for (var i = 0; i < res.length; i++) {
+                                village_names.push(options += '<option value="' + res[i]['id']+ '">' + res[i]['village_name'] + '</option>');
+                            }
+                        }
+                    selectBox = village_names;
+                    if (user_id == 'show_farmer_id'){
+                        $("#select-drp3").html(options);
+                        $("#select-drp3").change(function(){
+                            var selectedCountry = $(this).children("option:selected").val();
+                            $("#village_ids").val(selectedCountry);
+                        });
+                    }
+                    else{
+                        $("#select-drp30").html(options);
+                        $("#select-drp30").change(function(){
+                            var selectedCountry = $(this).children("option:selected").val();
+                            $("#village_ids1").val(selectedCountry);
+                        });
+                    }
+                }, 
+            })
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<!-- saved from url=(0029)http://127.0.0.1:8000/farmer/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Farmer</title>
+	<link rel="icon" type="image/png" href="http://127.0.0.1:8000/static/img/favicon.png">
+	<link rel="stylesheet" href="./Farmer_files/bootstrap.css"> 
+	<link href="./Farmer_files/select2.min.css" rel="stylesheet">
+	<link href="./Farmer_files/css" rel="stylesheet">
+	<link rel="stylesheet" href="./Farmer_files/animate.min.css">
+	<link rel="stylesheet" href="./Farmer_files/all.css">
+	<link href="./Farmer_files/css(1)" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="./Farmer_files/style.css">
+	<link rel="stylesheet" type="text/css" href="./Farmer_files/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="./Farmer_files/responsive.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="./Farmer_files/select.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="./Farmer_files/buttons.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="./Farmer_files/daterangepicker.css">
+</head>
+<body data-new-gr-c-s-check-loaded="14.1020.0" data-gr-ext-installed="">
+	<header>
+		<header>
+		<!-- Toaster messege -->
+		
+	</header>
+	</header>
+	<main id="main" class="admin-dashboard-wrapper pt-5">
+		<div class="container-fluid">
+			<div class="row mt-2p5">
+				<div class="col-sm-10">
+					<div class="leave-title">
+						<h4>Farmer Registration</h4>
+					</div>
+					<div class="add-leave-wrapper">
+						<form method="post" id="reportdown" novalidate="novalidate">
+							<div class="row">
+								<div class="form-group col-sm-2">
+									<label class="text-purple" for="select-drp1">District Name</label>
+									<select class="js-example-basic-single1 form-control select2-hidden-accessible" onchange="getdata(this.value)" id="select-drp1" name="district" data-select2-id="select-drp1" tabindex="-1" aria-hidden="true">
+										<option selected="" disabled="" data-select2-id="2">Please Select District Name</option>"
+											 
+												<option value="1">Pune</option>"
+											 
+												<option value="2">Ahmadnagar</option>"
+											 
+                                    </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: 190.484px;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-select-drp1-container"><span class="select2-selection__rendered" id="select2-select-drp1-container" role="textbox" aria-readonly="true" title="Please Select District Name">Please Select District Name</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                                    <input type="hidden" id="dist_ids" name="dist_ids">
+								</div>
+								<div class="form-group col-sm-2">
+									<label class="text-purple" for="select-drp2">Taluka Name</label>
+									<select class="js-example-basic-single2 form-control select2-hidden-accessible" id="select-drp2" onchange="taluka_data(this.value)" name="taluka" data-select2-id="select-drp2" tabindex="-1" aria-hidden="true">
+                                    </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="3" style="width: 190.484px;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-select-drp2-container"><span class="select2-selection__rendered" id="select2-select-drp2-container" role="textbox" aria-readonly="true"></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                                    <input type="hidden" id="taluka_ids" name="taluka_ids">
+								</div>
+								<div class="form-group col-sm-2">
+									<label class="text-purple" for="select-drp3">Village Name</label>
+									<select class="js-example-basic-single3 form-control select2-hidden-accessible" id="select-drp3" name="village" required="" data-select2-id="select-drp3" tabindex="-1" aria-hidden="true">
+									</select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="4" style="width: 190.484px;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-select-drp3-container"><span class="select2-selection__rendered" id="select2-select-drp3-container" role="textbox" aria-readonly="true"></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+									<input type="hidden" id="village_ids" name="village_ids">
+								</div>
+                                <div class="form-group col-sm-2 farmercnt" style="height:auto;">
+									<label class="text-purple" for="former-count">Farmer count</label>
+									<input type="text" id="farmer_count" name="farmer_count" disabled="">
+								</div>
+								<div class="form-group col-sm-2">
+									<button type="submit" class="btn btn-default btn-add-user">Clear</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script src="./Farmer_files/jquery.min.js.download"></script>
+	<script type="text/javascript" src="./Farmer_files/jquery.min.js(1).download"></script>
+	<script src="./Farmer_files/bootstrap.js.download"></script>
+	<script src="./Farmer_files/script.js.download"></script>
+	<!--Select2 Dropdown-->
+	<script src="./Farmer_files/select2.min.js.download"></script>
+
+	<script src="./Farmer_files/jquery.dataTables.min.js.download"></script>
+	<script src="./Farmer_files/dataTables.responsive.min.js.download"></script>
+	<script src="./Farmer_files/dataTables.select.min.js.download"></script>
+	<script src="./Farmer_files/dataTables.buttons.min.js.download"></script>
+	<script src="./Farmer_files/jszip.min.js.download"></script>
+	<script src="./Farmer_files/pdfmake.min.js.download"></script>
+	<script src="./Farmer_files/vfs_fonts.js.download"></script>
+	<script src="./Farmer_files/buttons.html5.min.js.download"></script>
+	<script src="./Farmer_files/buttons.print.min.js.download"></script>
+	<script src="./Farmer_files/jquery.validate.min.js.download"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.js-example-basic-single1').select2();
+			$('.js-example-basic-single2').select2();
+            $('.js-example-basic-single3').select2();
+		});
+
+	</script>
+    <script>
+    // Ajax for Taluka
+    function getdata(val) {
+            var token = 'kV0n7EK8YpuTXseVTlgtQKgU5Cwcv87hV7jEAuVkbi2XVV3Gu1izNJaQFWI2ruSk';
+			var x= val;
+			var data;
+			$.ajax({
+                headers: { "X-CSRFToken": token},
+				type:'post',
+				url:'http://127.0.0.1:8000/farmer/dist/',
+				data:{'id':x},
+				success:function(response){
+                    res = response['taluka'];
+                    if (response){
+                        var selectBox = document.getElementById('select-drp2');
+				        selectBox = null;
+                        options = '';
+                        taluka_names = [];
+                        selectBox = [];
+                        taluka_names.push(options += '<option selected disabled>' + 'Please Select Project' +'</option>');
+                            for (var i = 0; i < res.length; i++) {
+                                taluka_names.push(options += '<option value="' + res[i]['id']+ '">' + res[i]['taluka_name'] + '</option>');
+                            }
+                        }
+                    selectBox = taluka_names;
+                    $("#select-drp2").html(options);
+                    $("#select-drp2").change(function(){
+                        var selectedCountry = $(this).children("option:selected").val();
+                        $("#taluka_ids").val(selectedCountry);
+                    });
+                }, 
+            })
+        }
+    </script>
+    <script>
+    // Ajax for Village
+    function taluka_data(val) {
+            console.log("taluka data call")
+            var token = 'kV0n7EK8YpuTXseVTlgtQKgU5Cwcv87hV7jEAuVkbi2XVV3Gu1izNJaQFWI2ruSk';
+			var x= val;
+			var data;
+			$.ajax({
+                headers: {"X-CSRFToken": token},
+				type:'post',
+				url:'http://127.0.0.1:8000/farmer/taluka/',
+				data:{'id':x},
+				success:function(response){
+                    res = response['village'];
+                    console.log(res);
+                    if (response){
+                        var selectBox = document.getElementById('select-drp3');
+				        selectBox = null;
+                        options = '';
+                        village_names = [];
+                        selectBox = [];
+                        village_names.push(options += '<option selected disabled>' + 'Please Select Project' +'</option>');
+                            for (var i = 0; i < res.length; i++) {
+                                village_names.push(options += '<option value="' + res[i]['id']+ '">' + res[i]['village_name'] + '</option>');
+                            }
+                        }
+                    selectBox = village_names;
+                    $("#select-drp3").html(options);
+                    $("#select-drp3").change(function(){
+                        var selectedCountry = $(this).children("option:selected").val();
+                        $("#village_ids").val(selectedCountry);
+                    });
+                }, 
+            })
+        }
+    </script>
+	<script type="text/javascript">
+	    $("#reportdown").validate({
+      	 rules:{
+					pro_id :{required : true},
+					emp_name :{required : true}
+      	 },
+      	 messages:{
+					pro_id :{required: "Project Name is required"},
+					emp_name :{required: "Member Name is required"}
+				}
+      	});
+</script>
+
+
+</body></html>
